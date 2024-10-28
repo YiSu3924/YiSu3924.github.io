@@ -4,13 +4,16 @@ output:
   html_document:
     toc: true
     toc_float: true
-    theme: cerulean
+    theme: cosmo
 ---
 
 # This is Yi's website
 
-Hello everyone! Welcome to my page!
+Hello everyone! I am Yi Su, a graduate student in Biostatistics. Welcome to my page!
 
 <img src="images/IMG_4220.JPG" style="width:35%">
 
 # Link to my resume
+
+you can click [here](About.html) to view my resume.
+
