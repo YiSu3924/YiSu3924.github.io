@@ -9,7 +9,8 @@ output:
 
 # This is Yi's website
 
-Hello everyone!
+Hello everyone! Welcome to my page!
 
 <img src="images/IMG_4220.JPG" style="width:35%">
 
+# Link to my resume
