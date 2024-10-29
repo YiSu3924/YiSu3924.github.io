@@ -1,0 +1,74 @@
+---
+title: "dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(p8105.datasets)
+library(plotly)
+```
+
+```{r}
+data("ny_noaa") 
+ny_noaa = ny_noaa |>
+  janitor::clean_names() |> 
+  separate(date, c('year', 'month', 'day'), sep ='-') |>
+  mutate(prcp = as.numeric(prcp),
+         tmax = as.numeric(tmax),
+         tmin = as.numeric(tmin),
+         year = as.numeric(year),
+         month = factor(month, levels = sprintf("%02d", 1:12), labels = month.name),
+         prcp = prcp / 10,
+         tmax = tmax / 10,
+         tmin = tmin / 10) |>
+  filter(year == 2010)
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Average Monthly Precipitation in 2010
+
+```{r}
+ny_noaa |>
+  mutate(temp_range = tmax - tmin,
+         month = fct_reorder(month, temp_range)) |>
+  plot_ly(x = ~month, y = ~temp_range, color = ~month,
+          type = "box", colors = "viridis") |>
+  layout(xaxis = list(title = "Month"),
+         yaxis = list(title = "Temperature Range"))
+```
+
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Average Monthly Maximum Temperature in 2010
+
+```{r}
+ny_noaa |>
+  group_by(month) |>
+  summarise(avg_tmax = mean(tmax, na.rm = TRUE)) |>
+  plot_ly(x = ~month, y = ~avg_tmax, type = "scatter", mode = "lines+markers") |>
+  layout(xaxis = list(title = "Month"),
+         yaxis = list(title = "Average Maximum Temperature"))
+```
+
+### Monthly Temperature Range in 2010
+
+```{r}
+ny_noaa |>
+  group_by(month) |>
+  summarise(avg_prcp = mean(prcp, na.rm = TRUE)) |>
+  mutate(month = fct_reorder(month, avg_prcp)) |>
+  plot_ly(x = ~month, y= ~avg_prcp, color = ~month, 
+          type = "bar", colors = "viridis") |>
+  layout(xaxis = list(title = "Month"),
+         yaxis = list(title = "Average Precipitation"))
+```
+
